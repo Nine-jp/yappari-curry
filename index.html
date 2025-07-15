@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>やっぱりカレーだねフェス 訪問記録</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+JP&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header>
+    <div class="header-content">
+      <h1>やっぱりカレーだねフェス 訪問記録</h1>
+      <p class="event-period">2025年7月12日(土) - 2025年9月15日(月)</p>
+    </div>
+  </header>
+
+  <main>
+    <section id="controls">
+
+<div class="filter-container">
+  <div class="filter-row">
+    <button id="filterAll" class="filter-button active">全店舗</button>
+    <button id="filterVisited" class="filter-button">訪問済み</button>
+    <button id="filterUnvisited" class="filter-button">未訪問</button>
+  </div>
+
+  <div class="filter-single">
+    <button id="filterOpen" class="filter-button">今日行けるお店</button>
+  </div>
+</div>
+
+
+      <!-- エリア選択 -->
+      <div class="area-select">
+        <label for="areaFilter">エリアで絞り込み:</label>
+        <select id="areaFilter">
+          <option value="all">全て</option>
+          <option value="須坂">須坂</option>
+          <option value="小布施">小布施</option>
+          <option value="中野">中野</option>
+          <option value="高山">高山</option>
+        </select>
+      </div>
+
+
+    </section>
+
+    <section id="shop-list">
+  <div class="shop-list-header">
+    <h2>店舗一覧</h2>
+    <div class="reward-spot-info">
+      <p>🎁：プレゼント交換所</p>
+    </div>
+  </div>
+  <div id="shops-container">
+    <!-- JavaScript により動的に店舗リストが挿入されます -->
+  </div>
+</section>
+
+  </main>
+
+  <!-- モーダル -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h3 id="modalShopName"></h3>
+      <p><strong>エリア:</strong> <span id="modalArea"></span></p>
+      <p><strong>営業時間:</strong> <span id="modalHours"></span></p>
+      <p><strong>休み:</strong> <span id="modalHoliday"></span></p>
+      <p><strong>電話番号:</strong> <span id="modalPhone"></span></p>
+      <p><strong>住所:</strong> <span id="modalAddress"></span></p>
+      <p><strong>コメント:</strong> <span id="modalComment"></span></p>
+      <button id="googleMapLink" class="map-button" target="_blank">Googleマップで開く</button>
+      <button id="visitToggleButton" class="visit-toggle-button"></button>
+    </div>
+  </div>
+
+  <!-- JavaScriptファイル読み込み -->
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
