@@ -426,3 +426,36 @@ main {
   white-space: nowrap; /* 改行させない */
   font-weight: 600;
 }
+
+/* === 訪問数カウンターのスタイル === */
+.visit-counter {
+  font-family: 'Mochiy Pop One', sans-serif;
+  font-size: 1rem;
+  color: #4e342e;
+  background-color: #fff3e0;
+  border: 2px solid #fbc02d;
+  border-radius: 12px;
+  padding: 6px 12px;
+  display: inline-block;
+  margin-top: 16px;
+  margin-left: 4px;
+  box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+}
+
+.external-links {
+  margin-top: 10px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+.external-links img {
+  width: 60px;
+  height: 60px;
+  transition: transform 0.2s ease;
+}
+
+.external-links img:hover {
+  transform: scale(1.2);
+}

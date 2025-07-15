@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -10,29 +11,37 @@
 <body>
 
   <header>
-    <div class="header-content">
-      <h1>やっぱりカレーだねフェス 訪問記録</h1>
-      <p class="event-period">2025年7月12日(土) - 2025年9月15日(月)</p>
+  <div class="header-content">
+    <h1>やっぱり<br>カレーだねフェス<br>訪問記録</h1>
+    <p class="event-period">2025年7月12日(土) - 9月15日(月)</p>
+
+    <!-- 追加: リンクアイコン -->
+    <div class="external-links">
+      <a href="https://zugaya.com/sos/curry-fes/" target="_blank" title="公式サイト">
+        <img src="images/icon-home.svg" alt="公式サイト" />
+      </a>
+      <a href="https://www.instagram.com/yaparicurrydane/" target="_blank" title="Instagram">
+        <img src="images/icon-instagram.svg" alt="Instagram" />
+      </a>
     </div>
-  </header>
+  </div>
+</header>
+
 
   <main>
     <section id="controls">
 
-<div class="filter-container">
-  <div class="filter-row">
-    <button id="filterAll" class="filter-button active">全店舗</button>
-    <button id="filterVisited" class="filter-button">訪問済み</button>
-    <button id="filterUnvisited" class="filter-button">未訪問</button>
-  </div>
+      <div class="filter-container">
+        <div class="filter-row">
+          <button id="filterAll" class="filter-button active">全店舗</button>
+          <button id="filterVisited" class="filter-button">訪問済み</button>
+          <button id="filterUnvisited" class="filter-button">未訪問</button>
+        </div>
+        <div class="filter-single">
+          <button id="filterOpen" class="filter-button">今日行けるお店</button>
+        </div>
+      </div>
 
-  <div class="filter-single">
-    <button id="filterOpen" class="filter-button">今日行けるお店</button>
-  </div>
-</div>
-
-
-      <!-- エリア選択 -->
       <div class="area-select">
         <label for="areaFilter">エリアで絞り込み:</label>
         <select id="areaFilter">
@@ -44,20 +53,20 @@
         </select>
       </div>
 
+      <!-- 🔽 追加：訪問数カウンター -->
+      <p id="visitCountDisplay" class="visit-counter">訪問済み 0 / 0 店舗</p>
 
     </section>
 
     <section id="shop-list">
-  <div class="shop-list-header">
-    <h2>店舗一覧</h2>
-    <div class="reward-spot-info">
-      <p>🎁：プレゼント交換所</p>
-    </div>
-  </div>
-  <div id="shops-container">
-    <!-- JavaScript により動的に店舗リストが挿入されます -->
-  </div>
-</section>
+      <div class="shop-list-header">
+        <h2>店舗一覧</h2>
+        <div class="reward-spot-info">
+          <p>🎁：プレゼント交換所</p>
+        </div>
+      </div>
+      <div id="shops-container"></div>
+    </section>
 
   </main>
 
@@ -77,7 +86,6 @@
     </div>
   </div>
 
-  <!-- JavaScriptファイル読み込み -->
   <script src="data.js"></script>
   <script src="script.js"></script>
 </body>

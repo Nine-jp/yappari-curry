@@ -1,7 +1,5 @@
-// script.js（訪問済スタンプアニメーション完全対応版）
-
 let visitedShops = JSON.parse(localStorage.getItem('visitedShops')) || [];
-let recentlyVisitedIndex = null; // 最新で訪問済みにしたショップのindexを記録
+let recentlyVisitedIndex = null;
 
 function saveVisitedShops() {
     localStorage.setItem('visitedShops', JSON.stringify(visitedShops));
@@ -14,12 +12,11 @@ function createShopCard(shop, index) {
     if (visitedShops.includes(index)) {
         card.classList.add('visited');
 
-        // 最新訪問済みのカードならスタンプアニメーションを付与
         if (recentlyVisitedIndex === index) {
             card.classList.add('stamp-anim');
             setTimeout(() => {
                 card.classList.remove('stamp-anim');
-                recentlyVisitedIndex = null; // アニメ終了後クリア
+                recentlyVisitedIndex = null;
             }, 500);
         }
     }
@@ -38,7 +35,6 @@ function createShopCard(shop, index) {
 
     if (shop.isRewardSpot) {
         card.classList.add('reward-spot');
-
         const rewardIcon = document.createElement('span');
         rewardIcon.className = 'reward-icon';
         rewardIcon.textContent = '🎁';
@@ -73,10 +69,10 @@ function showModal(shop, index) {
     visitToggleButton.onclick = () => {
         if (isVisited) {
             visitedShops = visitedShops.filter(i => i !== index);
-            recentlyVisitedIndex = null; // 訪問解除なのでアニメなし
+            recentlyVisitedIndex = null;
         } else {
             visitedShops.push(index);
-            recentlyVisitedIndex = index; // アニメーション対象をセット
+            recentlyVisitedIndex = index;
         }
         saveVisitedShops();
         applyFilters();
@@ -92,10 +88,9 @@ function showModal(shop, index) {
 
     googleMapLink.style.display = shop.address && shop.address.trim() !== '' ? 'inline-block' : 'none';
 
-    // カレーの湯気風ふわっと演出（モーダルアニメーションリセット）
     const modalContent = document.querySelector('.modal-content');
     modalContent.style.animation = 'none';
-    modalContent.offsetHeight; // 強制再描画
+    modalContent.offsetHeight;
     modalContent.style.animation = 'steamPop 0.4s ease-out';
 
     document.getElementById('modal').style.display = 'block';
@@ -124,21 +119,63 @@ function applyFilters() {
     }
 
     if (showOpenToday) {
-        // 曜日フィルター機能が必要な場合ここに実装可能
+        filtered = filtered.filter(({ shop }) => isShopOpenToday(shop));
     }
 
     renderShopList(filtered);
+    updateVisitCounter(filtered);
+}
+
+function isShopOpenToday(shop) {
+    const holidayStr = shop.holiday;
+    if (!holidayStr) return true;
+
+    const today = new Date().getDay(); // 0(日) ～ 6(土)
+
+    const weekMap = {
+        '日': 0,
+        '月': 1,
+        '火': 2,
+        '水': 3,
+        '木': 4,
+        '金': 5,
+        '土': 6,
+    };
+
+    const match = holidayStr.match(/([日月火水木金土・]+)曜/);
+    if (!match) return true;
+
+    const daysStr = match[1];
+    const closedDays = daysStr.split('・').map(d => weekMap[d]).filter(d => d !== undefined);
+
+    return !closedDays.includes(today);
+}
+
+function updateVisitCounter(filteredShops) {
+    const total = filteredShops.length;
+    const visited = filteredShops.filter(({ index }) => visitedShops.includes(index)).length;
+    const display = document.getElementById('visitCountDisplay');
+    if (display) {
+        display.textContent = `訪問済み ${visited} / ${total} 店舗`;
+    }
 }
 
 function setFilterButtonEvents() {
-    const buttons = document.querySelectorAll('.filter-buttons button');
+    const buttons = document.querySelectorAll('.filter-container .filter-button');
     buttons.forEach(button => {
         button.addEventListener('click', () => {
-            buttons.forEach(b => b.classList.remove('active'));
-            button.classList.add('active');
+            if (button.parentElement.classList.contains('filter-row')) {
+                document.querySelectorAll('.filter-row .filter-button').forEach(b => b.classList.remove('active'));
+            }
+            if (button.id === 'filterOpen') {
+                button.classList.toggle('active');
+            } else {
+                button.classList.add('active');
+            }
             applyFilters();
         });
     });
+
     document.getElementById('areaFilter').addEventListener('change', applyFilters);
 }
 
