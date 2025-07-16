@@ -459,3 +459,67 @@ main {
 .external-links img:hover {
   transform: scale(1.2);
 }
+
+/* メニュー画像枠 */
+.menu-image {
+  width: 100%;
+  height: 120px;
+  margin: 6px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 「画像準備中」表示 */
+.no-image {
+  color: #999;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* メニュー名 */
+.menu-name {
+  font-weight: bold;
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
+/* メニューのコメント */
+.menu-comment {
+  font-size: 0.9rem;
+  margin-top: 4px;
+  color: #444;
+}
+
+/* EAT IN / TAKE OUT 情報 */
+.eat-take {
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin-top: 6px;
+  color: #333;
+}
+
+/* 共通スタイル：エリアとEAT IN/TAKE OUTのセレクトボックス */
+.styled-select {
+  padding: 6px 12px;
+  border: 1.5px solid #f5a623; /* 薄いオレンジの縁取り */
+  border-radius: 8px;
+  background-color: #fff3e0;
+  color: #333;
+  font-size: 1rem;
+  font-family: inherit;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}

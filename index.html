@@ -42,16 +42,29 @@
         </div>
       </div>
 
-      <div class="area-select">
-        <label for="areaFilter">エリアで絞り込み:</label>
-        <select id="areaFilter">
-          <option value="all">全て</option>
-          <option value="須坂">須坂</option>
-          <option value="小布施">小布施</option>
-          <option value="中野">中野</option>
-          <option value="高山">高山</option>
-        </select>
-      </div>
+      <!-- エリア選択 -->
+<div class="area-select">
+  <label for="areaFilter">どのエリアにする？:</label>
+  <select id="areaFilter" class="styled-select">
+    <option value="all">全て</option>
+    <option value="須坂">須坂</option>
+    <option value="小布施">小布施</option>
+    <option value="中野">中野</option>
+    <option value="高山">高山</option>
+  </select>
+</div>
+
+<!-- EAT IN / TAKE OUT フィルター -->
+<div class="style-select">
+  <label for="styleFilter">どっちで楽しむ？:</label>
+  <select id="styleFilter" class="styled-select">
+    <option value="all">全て</option>
+    <option value="eatIn">EAT IN</option>
+    <option value="takeOut">TAKE OUT</option>
+  </select>
+</div>
+
+
 
       <!-- 🔽 追加：訪問数カウンター -->
       <p id="visitCountDisplay" class="visit-counter">訪問済み 0 / 0 店舗</p>

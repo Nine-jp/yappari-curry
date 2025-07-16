@@ -1,5 +1,7 @@
+// script.js（訪問済スタンプアニメーション完全対応版）
+
 let visitedShops = JSON.parse(localStorage.getItem('visitedShops')) || [];
-let recentlyVisitedIndex = null;
+let recentlyVisitedIndex = null; // 最新で訪問済みにしたショップのindexを記録
 
 function saveVisitedShops() {
     localStorage.setItem('visitedShops', JSON.stringify(visitedShops));
@@ -12,11 +14,12 @@ function createShopCard(shop, index) {
     if (visitedShops.includes(index)) {
         card.classList.add('visited');
 
+        // 最新訪問済みのカードならスタンプアニメーションを付与
         if (recentlyVisitedIndex === index) {
             card.classList.add('stamp-anim');
             setTimeout(() => {
                 card.classList.remove('stamp-anim');
-                recentlyVisitedIndex = null;
+                recentlyVisitedIndex = null; // アニメ終了後クリア
             }, 500);
         }
     }
@@ -29,12 +32,44 @@ function createShopCard(shop, index) {
     areaEl.textContent = `エリア: ${shop.area}`;
     card.appendChild(areaEl);
 
-    const commentEl = document.createElement('p');
-    commentEl.textContent = shop.comment;
-    card.appendChild(commentEl);
+    const menu = shop.menus && shop.menus.length > 0 ? shop.menus[0] : null;
+    if (menu) {
+        const menuNameEl = document.createElement('p');
+        menuNameEl.className = 'menu-name';
+        menuNameEl.textContent = `🍛 ${menu.menuName}`;
+        card.appendChild(menuNameEl);
+
+        const imageWrapper = document.createElement('div');
+        imageWrapper.className = 'menu-image';
+        const img = document.createElement('img');
+        const imagePath = `images/menus/${index}.jpg`;
+        img.src = imagePath;
+        img.alt = menu.menuName;
+        img.onerror = () => {
+            imageWrapper.innerHTML = '<span class="no-image">画像準備中</span>';
+        };
+        imageWrapper.appendChild(img);
+        card.appendChild(imageWrapper);
+
+        const menuCommentEl = document.createElement('p');
+        menuCommentEl.className = 'menu-comment';
+        menuCommentEl.textContent = menu.comment;
+        card.appendChild(menuCommentEl);
+    }
+
+    const eatTakeEl = document.createElement('p');
+    eatTakeEl.className = 'eat-take';
+    const labels = [];
+    if (shop.eatIn === true) labels.push('[EAT IN]');
+    if (shop.takeOut === true) labels.push('[TAKE OUT]');
+    if (labels.length > 0) {
+        eatTakeEl.textContent = labels.join(' ');
+        card.appendChild(eatTakeEl);
+    }
 
     if (shop.isRewardSpot) {
         card.classList.add('reward-spot');
+
         const rewardIcon = document.createElement('span');
         rewardIcon.className = 'reward-icon';
         rewardIcon.textContent = '🎁';
@@ -102,6 +137,7 @@ document.querySelector('.close-button').onclick = () => {
 
 function applyFilters() {
     const area = document.getElementById('areaFilter').value;
+    const eatStyle = document.getElementById('styleFilter').value;
     const showVisited = document.getElementById('filterVisited').classList.contains('active');
     const showUnvisited = document.getElementById('filterUnvisited').classList.contains('active');
     const showOpenToday = document.getElementById('filterOpen').classList.contains('active');
@@ -110,6 +146,12 @@ function applyFilters() {
 
     if (area !== 'all') {
         filtered = filtered.filter(({ shop }) => shop.area === area);
+    }
+
+    if (eatStyle === 'eatIn') {
+        filtered = filtered.filter(({ shop }) => shop.eatIn === true);
+    } else if (eatStyle === 'takeOut') {
+        filtered = filtered.filter(({ shop }) => shop.takeOut === true);
     }
 
     if (showVisited) {
@@ -130,7 +172,7 @@ function isShopOpenToday(shop) {
     const holidayStr = shop.holiday;
     if (!holidayStr) return true;
 
-    const today = new Date().getDay(); // 0(日) ～ 6(土)
+    const today = new Date().getDay();
 
     const weekMap = {
         '日': 0,
@@ -177,6 +219,7 @@ function setFilterButtonEvents() {
     });
 
     document.getElementById('areaFilter').addEventListener('change', applyFilters);
+    document.getElementById('styleFilter').addEventListener('change', applyFilters);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
