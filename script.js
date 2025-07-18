@@ -363,180 +363,111 @@ function isShopOpenToday(shop) {
 }
 
 function isShopOpenNow(shop) {
-    const now = new Date();
-    const currentDay = now.getDay(); // 0 (Sunday) to 6 (Saturday)
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    // Check if the shop is closed today based on holiday information
+    // isShopOpenTodayで今日の曜日が定休日かチェック
     if (!isShopOpenToday(shop)) {
         return false;
     }
 
     const hoursStr = shop.hours;
-    if (!hoursStr || hoursStr.includes("Instagram") || hoursStr.includes("不定休")) {
-        return false; // Cannot determine if open, so assume closed for "open now" filter
+    // 営業時間情報が特殊な場合は判定不可
+    if (!hoursStr || hoursStr.includes("Instagram") || hoursStr.includes("不定休") || hoursStr.includes("要確認")) {
+        return false;
     }
 
-    // Parse operating hours (e.g., "10:00-18:00")
-    const parts = hoursStr.split('-');
-    if (parts.length !== 2) {
-        return false; // Invalid format
-    }
+    const now = new Date();
+    const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
 
-    const [openTimeStr, closeTimeStr] = parts;
-    const [openHour, openMinute] = openTimeStr.split(':').map(Number);
-    const [closeHour, closeMinute] = closeTimeStr.split(':').map(Number);
+    // "11:30-14:00" や "17:00-21:00" のような時間範囲をすべて抽出する正規表現
+    const timeRangeRegex = /(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/g;
+    let match;
+    
+    // 複数の営業時間帯をチェック
+    while ((match = timeRangeRegex.exec(hoursStr)) !== null) {
+        const [_, openTimeStr, closeTimeStr] = match;
 
-    // Convert current time to minutes from midnight
-    const currentTimeInMinutes = currentHour * 60 + currentMinute;
-    const openTimeInMinutes = openHour * 60 + openMinute;
-    let closeTimeInMinutes = closeHour * 60 + closeMinute;
+        const [openHour, openMinute] = openTimeStr.split(':').map(Number);
+        const [closeHour, closeMinute] = closeTimeStr.split(':').map(Number);
 
-    // Handle overnight hours (e.g., 22:00-02:00)
-    if (closeTimeInMinutes < openTimeInMinutes) {
-        closeTimeInMinutes += 24 * 60; // Add 24 hours for the next day
-        if (currentTimeInMinutes < openTimeInMinutes) {
-            currentTimeInMinutes += 24 * 60; // Adjust current time if it's past midnight
+        const openTimeInMinutes = openHour * 60 + openMinute;
+        const closeTimeInMinutes = closeHour * 60 + closeMinute;
+
+        // 日をまたがない場合 (例: 10:00-18:00)
+        if (openTimeInMinutes <= closeTimeInMinutes) {
+            if (currentTimeInMinutes >= openTimeInMinutes && currentTimeInMinutes < closeTimeInMinutes) {
+                return true; // 現在時刻が範囲内
+            }
+        } 
+        // 日をまたぐ場合 (例: 22:00-02:00)
+        else {
+            if (currentTimeInMinutes >= openTimeInMinutes || currentTimeInMinutes < closeTimeInMinutes) {
+                return true; // 現在時刻が開店時間以降、または閉店時間前
+            }
         }
     }
 
-    return currentTimeInMinutes >= openTimeInMinutes && currentTimeInMinutes <= closeTimeInMinutes;
+    return false; // どの営業時間帯にも当てはまらない
 }
 
 function isShopOpenDuringTimeOfDay(shop, timeOfDay) {
     const hoursStr = shop.hours;
-    if (!hoursStr || hoursStr.includes("Instagram") || hoursStr.includes("不定休")) {
-        return false;
-    }
 
     const allDayShops = [
-        "kitchen FUTARIYA",
-        "kitchen & cafe ツユハル",
-        "喫茶アウヱル橙",
-        "ねぎ福",
-        "須坂温泉 古城荘",
-        "ざかすラーメン",
-        "五蘊",
-        "クルア アリヤ",
-        "桂亭",
-        "Café＋Delight",
-        "長野土鍋ラーメンたけさん小布施店",
-        "響 YURA",
-        "多国籍ber 今どきの笹",
-        "3RD CAFF & MORE",
-        "こどもとときどきハープカフェ nana-mar",
-        "新鮮屋オタギリ",
-        "蔵のまち観光交流センターくらっと",
-        "Sweets market cafe",
-        "玉林餅菓子店",
-        "ラノッキオ",
-        "パンと焼菓子 ohana",
-        "中野陣屋・県庁記念館内 カフェ陣屋",
-        "+M",
-        "Bakery ON!",
-        "道のカフェ アンティロープ",
-        "Wine&Café Véraison ヴェレゾン"
+        "kitchen FUTARIYA", "kitchen & cafe ツユハル", "喫茶アウヱル橙", "ねぎ福", "須坂温泉 古城荘", "ざかすラーメン", "五蘊", "クルア アリヤ", "桂亭", "Café＋Delight", "長野土鍋ラーメンたけさん小布施店", "響 YURA", "多国籍ber 今どきの笹", "3RD CAFF & MORE", "こどもとときどきハープカフェ nana-mar", "新鮮屋オタギリ", "Sweets market cafe", "玉林餅菓子店", "ラノッキオ"
     ];
-
     const lunchShops = [
-        "川合精肉店",
-        "かんてんぱぱショップ小布施店",
-        "信州中野観光センター",
-        "おやき茶屋 たちべり",
-        "ママちきん",
-        "山下薬局",
-        "おやつと喫茶のお店 菓秀/喫茶ハル",
-        "おやつとごはんの店 ai",
-        "カフェル・パニエ",
-        "たけちゃん食品 (須坂市役所地下食堂)",
-        "田中本家博物館 喫茶「龍潜」",
-        "ICHI cafe",
-        "kitchen vicky",
-        "ミナサンド",
-        "見晴茶屋"
+        "川合精肉店", "かんてんぱぱショップ小布施店", "パンと焼菓子 ohana", "信州中野観光センター", "おやき茶屋 たちべり", "ママちきん", "山下薬局", "おやつと喫茶のお店 菓秀/喫茶ハル", "おやつとごはんの店 ai", "カフェル・パニエ", "たけちゃん食品 (須坂市役所地下食堂)", "蔵のまち観光交流センターくらっと", "田中本家博物館 喫茶「龍潜」", "中野陣屋・県庁記念館内 カフェ陣屋", "ICHI cafe", "kitchen vicky", "+M", "Bakery ON!", "ミナサンド", "見晴茶屋", "道のカフェ アンティロープ", "Wine&Café Véraison ヴェレゾン"
     ];
-
     const dinnerShops = [
-        "焼肉居酒屋みのり",
-        "ラブズピアット",
-        "酒食処 縁-えにし-"
+        "焼肉居酒屋みのり", "ラブズピアット", "酒食処 縁-えにし-"
     ];
 
-    // 明示的なリストによる分類を最優先
+    // Helper to extract time ranges from the hours string
+    const extractTimeRanges = (str) => {
+        if (!str || str.includes("Instagram") || str.includes("不定休") || str.includes("要確認")) {
+            return [];
+        }
+        const timeRangeRegex = /(\d{1,2}):\d{2}\s*-\s*(\d{1,2}):\d{2}/g;
+        let ranges = [];
+        let match;
+        while ((match = timeRangeRegex.exec(str)) !== null) {
+            const openHour = parseInt(match[1].split(':')[0], 10);
+            const closeHour = parseInt(match[2].split(':')[0], 10);
+            ranges.push({ openHour, closeHour });
+        }
+        return ranges;
+    };
+
+    const shopTimeRanges = extractTimeRanges(hoursStr);
+
     if (timeOfDay === 'allday') {
         return allDayShops.includes(shop.name);
     }
+
+    if (allDayShops.includes(shop.name)) {
+        return true;
+    }
+
     if (timeOfDay === 'lunch') {
-        return lunchShops.includes(shop.name);
-    }
-    if (timeOfDay === 'dinner') {
-        return dinnerShops.includes(shop.name);
-    }
-
-    // 'all'が選択されている場合は、以降のロジックで判断
-    if (timeOfDay === 'all') {
-        const timeToMinutes = (timeStr) => {
-            const [hour, minute] = timeStr.split(':').map(Number);
-            return hour * 60 + minute;
-        };
-
-        const doRangesOverlap = (shopOpenStart, shopOpenEnd, filterStart, filterEnd) => {
-            if (shopOpenEnd < shopOpenStart) {
-                shopOpenEnd += 24 * 60;
-            }
-            return Math.max(shopOpenStart, filterStart) < Math.min(shopOpenEnd, filterEnd);
-        };
-
-        const LUNCH_PERIOD_START = timeToMinutes("11:00");
-        const LUNCH_PERIOD_END = timeToMinutes("15:00");
-        const DINNER_PERIOD_START = timeToMinutes("17:00");
-        const DINNER_PERIOD_END = timeToMinutes("22:00");
-
-        const timeRangeRegex = /(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/g;
-        let shopTimeRanges = [];
-        let match;
-        while ((match = timeRangeRegex.exec(hoursStr)) !== null) {
-            shopTimeRanges.push({
-                open: timeToMinutes(match[1]),
-                close: timeToMinutes(match[2])
-            });
+        if (lunchShops.includes(shop.name)) {
+            return true;
         }
-
-        if (shopTimeRanges.length === 0) {
-            // Fallback for text-based heuristics if no explicit time ranges are found
-            if (hoursStr.includes("オールデイ") || hoursStr.includes("終日")) {
-                return true;
-            }
-            if (hoursStr.includes("ランチ") || hoursStr.includes("昼")) {
-                return true;
-            }
-            if (hoursStr.includes("ディナー") || hoursStr.includes("夜")) {
-                return true;
-            }
-            if (hoursStr.includes("16:00-") && hoursStr.includes("カレーは17時から提供")) {
-                return true;
-            }
-            return false;
-        }
-
-        let overlapsLunch = false;
-        let overlapsDinner = false;
-
         for (const range of shopTimeRanges) {
-            if (doRangesOverlap(range.open, range.close, LUNCH_PERIOD_START, LUNCH_PERIOD_END)) {
-                overlapsLunch = true;
-            }
-            if (doRangesOverlap(range.open, range.close, DINNER_PERIOD_START, DINNER_PERIOD_END)) {
-                overlapsDinner = true;
+            if (range.closeHour <= 18 && range.closeHour >= range.openHour) {
+                return true;
             }
         }
-
-        // For 'all' filter, return true if it overlaps with either lunch or dinner, or is explicitly listed in any category
-        return overlapsLunch || overlapsDinner || allDayShops.includes(shop.name) || lunchShops.includes(shop.name) || dinnerShops.includes(shop.name);
+    } else if (timeOfDay === 'dinner') {
+        if (dinnerShops.includes(shop.name)) {
+            return true;
+        }
+        for (const range of shopTimeRanges) {
+            if (range.openHour >= 18) {
+                return true;
+            }
+        }
     }
 
-    return false; // Should not reach here for specific timeOfDay filters if not in explicit lists
+    return false;
 }
 
 function updateVisitCounter(filteredShops) {
@@ -570,9 +501,16 @@ function setFilterButtonEvents() {
                 });
                 button.classList.add('active');
             }
-            // Handle toggle buttons (Open Today, Open Now)
+            // Handle mutually exclusive buttons (Open Today, Open Now)
             else if (button.id === 'filterOpen' || button.id === 'filterOpenNow') {
-                button.classList.toggle('active');
+                const wasActive = button.classList.contains('active');
+                // Deactivate both buttons first
+                document.getElementById('filterOpen').classList.remove('active');
+                document.getElementById('filterOpenNow').classList.remove('active');
+                // If the button was not active before, activate it.
+                if (!wasActive) {
+                    button.classList.add('active');
+                }
             }
             applyFilters();
         });
