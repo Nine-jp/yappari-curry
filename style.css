@@ -2,7 +2,7 @@
 
 /* 全体のベース設定 */
 body {
-    font-family: 'Noto Sans JP', 'Mochiy Pop One', sans-serif;
+    font-family: 'Zen Maru Gothic', 'Mochiy Pop One', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #fff8e1;
@@ -37,7 +37,7 @@ header .event-period {
 
 /* ベースフォント指定 */
 body {
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: 'Zen Maru Gothic', sans-serif;
   background-color: #f9f9f9;
   color: #333;
 }
@@ -49,7 +49,7 @@ h1, h2, h3, .shop-name, .filter-buttons button.active {
 
 /* ボタン、モーダル、ラベルなどは読みやすく */
 button, select, label {
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: 'Zen Maru Gothic', sans-serif;
 }
 
 /* メインコンテンツ */
@@ -71,6 +71,7 @@ main {
 
 .area-select {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 8px;
     font-size: 1rem;
@@ -137,27 +138,7 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-}
-
-/* スタンプ風アニメーション */
-@keyframes stampPop {
-  0% {
-    transform: scale(0.5) rotate(-15deg);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.2) rotate(3deg);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
-}
-
-/* スタンプアニメーション用クラス */
-.shop-card.visited.stamp-anim {
-  animation: stampPop 0.4s ease-out;
+    position: relative;
 }
 
 .shop-card:hover {
@@ -184,7 +165,6 @@ main {
     color: #5d4037;
 }
 
-/* ★プレゼント交換所のスタイルを他店舗に合わせる（色・太字・フォントサイズを解除） */
 .reward-spot {
     color: inherit;
     font-weight: normal;
@@ -192,24 +172,16 @@ main {
     margin-top: 0;
 }
 
-/* 店舗カードの下部にプレゼント交換所アイコンを表示 */
-.shop-card {
-  position: relative;
-  /* 既存スタイルはそのまま */
-}
-
-/* プレゼント交換所アイコン */
 .reward-icon {
   position: absolute;
   bottom: 12px;
   right: 12px;
   font-size: 1.5rem;
-  color: #f3a823; /* ゴールドっぽい色 */
+  color: #f3a823;
   user-select: none;
   pointer-events: none;
 }
 
-/* モーダルウィンドウ */
 .modal {
     display: none;
     position: fixed;
@@ -286,16 +258,15 @@ main {
 }
 
 .visit-toggle-button {
-    background-color: #ef6c00; /* Orange */
+    background-color: #ef6c00;
     color: #fff8e1;
 }
 
 .visit-toggle-button.visited {
-    background-color: #6d4c41; /* Brown */
+    background-color: #6d4c41;
     color: #fff8e1;
 }
 
-/* レスポンシブ対応 */
 @media screen and (max-width: 600px) {
     #controls {
         flex-direction: column;
@@ -307,7 +278,6 @@ main {
     }
 }
 
-/* 湯気のようにふわっと現れるアニメーション */
 @keyframes steamPop {
   0% {
     transform: scale(0.95) translateY(20px);
@@ -319,34 +289,10 @@ main {
   }
 }
 
-/* モーダル出現時にアニメーションを適用 */
 .modal-content {
   animation: steamPop 0.4s ease-out;
 }
 
-/* CSS追加部分 */
-
-/* スタンプポップアニメーション */
-@keyframes stampPop {
-  0% {
-    transform: scale(0.5) rotate(-15deg);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.2) rotate(3deg);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
-}
-
-.shop-card.visited.stamp-anim {
-  animation: stampPop 0.4s ease-out;
-}
-
-/* === フィルターボタン全体のラッパー === */
 .filter-container {
   display: flex;
   flex-direction: column;
@@ -356,26 +302,23 @@ main {
   margin-bottom: 10px;
 }
 
-/* === 上段：3つ横並びのフィルター === */
 .filter-row {
   display: flex;
-  flex-wrap: nowrap;         /* 折り返し禁止！ */
-  justify-content: center;   /* 真ん中に揃える */
+  flex-wrap: nowrap;
+  justify-content: center;
   gap: 10px;
   width: 100%;
-  max-width: 600px;          /* 適度な幅 */
+  max-width: 600px;
 }
 
-/* === 下段：単独ボタン === */
 .filter-single {
   margin-top: 16px;
   text-align: center;
 }
 
-/* === 共通スタイル for ボタン === */
 .filter-button {
   flex: 1 1 auto;
-  white-space: nowrap;      /* 改行防止 */
+  white-space: nowrap;
   padding: 10px 16px;
   background-color: #fbc02d;
   color: #4e342e;
@@ -389,10 +332,9 @@ main {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   min-width: 90px;
   max-width: 200px;
-  flex-shrink: 0;           /* 圧縮禁止（改行防止） */
+  flex-shrink: 0;
 }
 
-/* === ホバー・アクティブ・選択中スタイル === */
 .filter-button:hover {
   background-color: #f9a825;
 }
@@ -406,11 +348,10 @@ main {
   color: #fff8e1;
 }
 
-/* 「店舗一覧」と「🎁」の横並び用ラッパー */
 .shop-list-header {
   display: flex;
   align-items: center;
-  gap: 24px; /* お好みで間隔調整 */
+  gap: 24px;
   margin-bottom: 12px;
 }
 
@@ -424,11 +365,10 @@ main {
   margin: 0;
   font-size: 1rem;
   color: #f57c00;
-  white-space: nowrap; /* 改行させない */
+  white-space: nowrap;
   font-weight: 600;
 }
 
-/* === 訪問数カウンターのスタイル === */
 .visit-counter {
   font-family: 'Mochiy Pop One', sans-serif;
   font-size: 1rem;
@@ -461,23 +401,6 @@ main {
   transform: scale(1.2);
 }
 
-/* モーダルアニメーション */
-@keyframes steamPop {
-  0% {
-    transform: scale(0.95) translateY(20px);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
-}
-
-.modal-content {
-  animation: steamPop 0.4s ease-out;
-}
-
-/* モーダル内のインスタグラムアイコン */
 .modal-instagram-link {
   display: inline-block;
   margin-left: 10px;
@@ -485,39 +408,35 @@ main {
 }
 
 .modal-instagram-link img {
-  width: 24px; /* アイコンのサイズ調整 */
+  width: 24px;
   height: 24px;
 }
 
-/* 訪問ゲージのスタイル */
 .visit-gauge {
   display: flex;
-  flex-wrap: wrap; /* 折り返しを許可 */
-  gap: 5px; /* アイコン間のスペース */
+  flex-wrap: wrap;
+  gap: 5px;
   margin-top: 15px;
-  justify-content: center; /* 中央寄せ */
+  justify-content: center;
 }
 
 .visit-gauge img {
-  width: 30px; /* アイコンのサイズ */
+  width: 30px;
   height: 30px;
 }
 
-/* スマホ対応 */
 @media (max-width: 600px) {
   .visit-gauge {
-    justify-content: center; /* スマホでも中央寄せ */
+    justify-content: center;
   }
 }
 
-/* カレー号モーダル専用のスタイル */
 .currygo-modal-content {
-  /* 既存のmodal-contentのスタイルを継承しつつ、必要に応じて調整 */
-  max-width: 500px; /* カレー号モーダルに合わせた幅 */
+  max-width: 500px;
 }
 
 .currygo-modal-content h3 {
-  color: #f57c00; /* カレー号のテーマカラー */
+  color: #f57c00;
 }
 
 .currygo-modal-content .shop-info {
@@ -560,29 +479,26 @@ main {
   flex-wrap: wrap;
   justify-content: center;
   gap: 5px;
-  max-width: 195px; /* 1行5個のアイコン + gap */
-  margin: 0 auto; /* 中央配置 */
+  max-width: 195px;
+  margin: 0 auto;
 }
 
 .currygo-modal-content .visit-gauge img {
-  width: 35px; /* カレー号モーダル内のアイコンサイズ */
+  width: 35px;
   height: 35px;
 }
 
-/* モーダル内の日付表示 */
 .currygo-modal-content .date-display {
   font-weight: bold;
   color: #6d4c41;
 }
 
-/* モーダル内の店名 */
 .currygo-modal-content .shop-name-display {
   font-size: 1.3rem;
   font-weight: bold;
   color: #4e342e;
 }
 
-/* モーダル内のインスタグラムアイコン */
 .currygo-modal-content .instagram-icon {
   width: 40px;
   height: 40px;
@@ -590,20 +506,17 @@ main {
   margin-left: 5px;
 }
 
-/* モーダル内の訪問ゲージのタイトル */
 .currygo-modal-content .gauge-title {
   font-size: 1.1rem;
   margin-bottom: 10px;
   color: #5d4037;
 }
 
-/* モーダル内の訪問ゲージのアイコン */
 .currygo-modal-content .gauge-icon {
   width: 30px;
   height: 30px;
 }
 
-/* モーダル内の訪問ゲージの行 */
 .currygo-modal-content .gauge-row {
   display: flex;
   justify-content: center;
@@ -611,26 +524,22 @@ main {
   margin-bottom: 5px;
 }
 
-/* モーダル内の訪問ゲージのコンテナ */
 .currygo-modal-content .visit-gauge-wrapper {
   margin-top: 20px;
   text-align: center;
 }
 
-/* モーダル内の訪問ゲージのテキスト */
 .currygo-modal-content .visit-gauge-text {
   font-size: 1rem;
   color: #6d4c41;
   margin-top: 10px;
 }
 
-/* モーダル内の訪問ゲージのアイコン */
 .currygo-modal-content .visit-gauge-icon {
   width: 30px;
   height: 30px;
 }
 
-/* モーダル内の訪問ゲージの行 */
 .currygo-modal-content .visit-gauge-row {
   display: flex;
   justify-content: center;
@@ -638,38 +547,90 @@ main {
   margin-bottom: 5px;
 }
 
-/* モーダル内の訪問ゲージのコンテナ */
-.currygo-modal-content .visit-gauge-container {
-  margin-top: 20px;
-  text-align: center;
-}
-
-/* モーダル内の訪問ゲージのテキスト */
-.currygo-modal-content .visit-gauge-text {
-  font-size: 1rem;
-  color: #6d4c41;
-  margin-top: 10px;
-}
-
-/* モーダル内の訪問ゲージのアイコン */
-.currygo-modal-content .visit-gauge-icon {
-  width: 30px;
-  height: 30px;
-}
-
-/* モーダル内の訪問ゲージの行 */
-.currygo-modal-content .visit-gauge-row {
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-  margin-bottom: 5px;
-}
-
-/* 店舗カード内の画像スタイル */
 .shop-card-image {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.currygo-card-comment {
+  font-size: 0.9rem;
+  color: #f57c00;
+  font-weight: bold;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: center;
+  background-color: #fff3e0;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #fbc02d;
+}
+
+.menu-item {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px dashed #fbc02d;
+}
+
+.menu-item h4 {
+  font-size: 1.1rem;
+  color: #6d4c41;
+  margin: 0 0 5px 0;
+}
+
+.menu-item p {
+  font-size: 0.9rem;
+  color: #5d4037;
+  margin: 3px 0;
+}
+
+.shop-hours-display {
+  font-size: 0.9rem;
+  color: #5d4037;
+  margin-bottom: 8px;
+}
+
+/* 訪問済みカードのスタイル */
+.shop-card.visited {
+  background-color: #e0e0e0;
+  border-color: #bdbdbd;
+}
+
+.shop-card.visited .shop-name {
+  color: #757575;
+}
+
+.shop-card.visited .shop-card-image {
+  opacity: 0.6;
+}
+
+/* スタンプ画像用のコンテナ */
+.stamp-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* スタンプ画像 */
+.stamp-image {
+  width: 60%;
+  max-width: 150px;
+  opacity: 0;
+  transform: scale(2) rotate(15deg);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* スタンプ表示時のアニメーション */
+.stamp-image.show {
+  opacity: 0.85;
+  transform: scale(1) rotate(-10deg);
 }

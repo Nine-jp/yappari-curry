@@ -69,17 +69,24 @@ function saveVisitedShops() {
 function createShopCard(shop) {
   const card = document.createElement("div");
   card.className = "shop-card";
+  card.dataset.shopId = shop.id; // ★ IDをデータ属性として設定
+
+  // スタンプ用のコンテナを追加
+  const stampContainer = document.createElement("div");
+  stampContainer.className = "stamp-container";
+  const stampImage = document.createElement("img");
+  stampImage.src = "images/done-stamp.png";
+  stampImage.alt = "訪問済み";
+  stampImage.className = "stamp-image";
+  stampContainer.appendChild(stampImage);
+  card.appendChild(stampContainer);
 
   // IDで訪問済みをチェック
   if (visitedShops.includes(shop.id)) {
     card.classList.add("visited");
-
-    if (recentlyVisitedId === shop.id) {
-      card.classList.add("stamp-anim");
-      setTimeout(() => {
-        card.classList.remove("stamp-anim");
-        recentlyVisitedId = null;
-      }, 500);
+    // 直前に訪問したカード以外は、最初から表示しておく
+    if (shop.id !== recentlyVisitedId) {
+      stampImage.classList.add('show');
     }
   }
 
@@ -88,10 +95,24 @@ function createShopCard(shop) {
   nameEl.textContent = shop.name.replace(" ★", "");
   card.appendChild(nameEl);
 
+  // 営業時間
+  const hoursEl = document.createElement("p");
+  hoursEl.className = "shop-hours-display";
+  hoursEl.textContent = `営業時間: ${shop.hours}`;
+  card.appendChild(hoursEl);
+
   // エリア
   const areaEl = document.createElement("p");
   areaEl.textContent = `エリア: ${shop.area}`;
   card.appendChild(areaEl);
+
+  // カレー号の今週の出店コメント
+  if (shop.type === 'currygo' && isCurryGoThisWeek(shop.date)) {
+    const currygoComment = document.createElement("p");
+    currygoComment.className = "currygo-card-comment";
+    currygoComment.textContent = "今週は出店だよ！";
+    card.appendChild(currygoComment);
+  }
 
   // 画像を追加
   if (shop.image) {
@@ -158,6 +179,22 @@ function renderShopList(filteredShops) {
     filteredShops.forEach((shop) => { // shopオブジェクト全体を受け取る
         container.appendChild(createShopCard(shop));
     });
+
+    // ★ スタンプアニメーションのトリガー
+    if (recentlyVisitedId) {
+        // DOMの更新が反映されるのを待つために少し遅延させる
+        setTimeout(() => {
+            const cardToStamp = container.querySelector(`[data-shop-id="${recentlyVisitedId}"]`);
+            if (cardToStamp) {
+                const stampImage = cardToStamp.querySelector('.stamp-image');
+                if (stampImage) {
+                    new Audio('sounds/stamp.mp3').play(); // ★ 効果音を再生
+                    stampImage.classList.add('show');
+                }
+            }
+            recentlyVisitedId = null; // アニメーション後はリセット
+        }, 100);
+    }
 }
 
 function showModal(shop) { // indexではなくshopオブジェクト全体を受け取る
@@ -185,12 +222,17 @@ function showModal(shop) { // indexではなくshopオブジェクト全体を�
     }
 
     visitToggleButton.onclick = () => {
-        if (isVisited) {
-            visitedShops = visitedShops.filter(id => id !== shop.id); // IDでフィルタリング
-            recentlyVisitedId = null;
+        const currentIsVisited = visitedShops.includes(shop.id); // クリック時に最新の状態を再評価
+        if (currentIsVisited) {
+            visitedShops = visitedShops.filter(id => id !== shop.id);
+            visitToggleButton.textContent = '訪問済'; // ボタンのテキストを即座に更新
+            visitToggleButton.classList.remove('visited'); // ボタンのクラスを即座に更新
+            recentlyVisitedId = null; // ★ 解除時はアニメーション不要
         } else {
-            visitedShops.push(shop.id); // IDを追加
-            recentlyVisitedId = shop.id;
+            visitedShops.push(shop.id);
+            visitToggleButton.textContent = '訪問済解除'; // ボタンのテキストを即座に更新
+            visitToggleButton.classList.add('visited'); // ボタンのクラスを即座に更新
+            recentlyVisitedId = shop.id; // ★ 訪問時にIDをセット
         }
         saveVisitedShops();
         applyFilters();
@@ -254,24 +296,41 @@ document.querySelector('.currygo-close-button').onclick = () => {
 
 function applyFilters() {
     const area = document.getElementById('areaFilter').value;
+    const eatInTakeOut = document.getElementById('eatInTakeOutFilter').value;
     const showVisited = document.getElementById('filterVisited').classList.contains('active');
     const showUnvisited = document.getElementById('filterUnvisited').classList.contains('active');
     const showOpenToday = document.getElementById('filterOpen').classList.contains('active');
+    const showOpenNow = document.getElementById('filterOpenNow').classList.contains('active'); // New filter
+    const timeOfDay = document.getElementById('timeOfDayFilter').value; // New filter
 
-    let filtered = allShopsData; // shopsDataからallShopsDataに変更
+    let filtered = allShopsData;
 
     if (area !== 'all') {
         filtered = filtered.filter((shop) => shop.area === area);
     }
 
+    if (eatInTakeOut === 'eatin') {
+        filtered = filtered.filter((shop) => shop.eatIn);
+    } else if (eatInTakeOut === 'takeout') {
+        filtered = filtered.filter((shop) => shop.takeOut);
+    }
+
     if (showVisited) {
-        filtered = filtered.filter((shop) => visitedShops.includes(shop.id)); // IDでフィルタリング
+        filtered = filtered.filter((shop) => visitedShops.includes(shop.id));
     } else if (showUnvisited) {
-        filtered = filtered.filter((shop) => !visitedShops.includes(shop.id)); // IDでフィルタリング
+        filtered = filtered.filter((shop) => !visitedShops.includes(shop.id));
     }
 
     if (showOpenToday) {
         filtered = filtered.filter((shop) => isShopOpenToday(shop));
+    }
+
+    if (showOpenNow) { // Apply "open now" filter
+        filtered = filtered.filter((shop) => isShopOpenNow(shop));
+    }
+
+    if (timeOfDay !== 'all') { // Apply time of day filter
+        filtered = filtered.filter((shop) => isShopOpenDuringTimeOfDay(shop, timeOfDay));
     }
 
     renderShopList(filtered);
@@ -303,22 +362,194 @@ function isShopOpenToday(shop) {
     return !closedDays.includes(today);
 }
 
+function isShopOpenNow(shop) {
+    const now = new Date();
+    const currentDay = now.getDay(); // 0 (Sunday) to 6 (Saturday)
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    // Check if the shop is closed today based on holiday information
+    if (!isShopOpenToday(shop)) {
+        return false;
+    }
+
+    const hoursStr = shop.hours;
+    if (!hoursStr || hoursStr.includes("Instagram") || hoursStr.includes("不定休")) {
+        return false; // Cannot determine if open, so assume closed for "open now" filter
+    }
+
+    // Parse operating hours (e.g., "10:00-18:00")
+    const parts = hoursStr.split('-');
+    if (parts.length !== 2) {
+        return false; // Invalid format
+    }
+
+    const [openTimeStr, closeTimeStr] = parts;
+    const [openHour, openMinute] = openTimeStr.split(':').map(Number);
+    const [closeHour, closeMinute] = closeTimeStr.split(':').map(Number);
+
+    // Convert current time to minutes from midnight
+    const currentTimeInMinutes = currentHour * 60 + currentMinute;
+    const openTimeInMinutes = openHour * 60 + openMinute;
+    let closeTimeInMinutes = closeHour * 60 + closeMinute;
+
+    // Handle overnight hours (e.g., 22:00-02:00)
+    if (closeTimeInMinutes < openTimeInMinutes) {
+        closeTimeInMinutes += 24 * 60; // Add 24 hours for the next day
+        if (currentTimeInMinutes < openTimeInMinutes) {
+            currentTimeInMinutes += 24 * 60; // Adjust current time if it's past midnight
+        }
+    }
+
+    return currentTimeInMinutes >= openTimeInMinutes && currentTimeInMinutes <= closeTimeInMinutes;
+}
+
+function isShopOpenDuringTimeOfDay(shop, timeOfDay) {
+    const hoursStr = shop.hours;
+    if (!hoursStr || hoursStr.includes("Instagram") || hoursStr.includes("不定休")) {
+        return false;
+    }
+
+    const allDayShops = [
+        "kitchen FUTARIYA",
+        "kitchen & cafe ツユハル",
+        "喫茶アウヱル橙",
+        "ねぎ福",
+        "須坂温泉 古城荘",
+        "ざかすラーメン",
+        "五蘊",
+        "クルア アリヤ",
+        "桂亭",
+        "Café＋Delight",
+        "長野土鍋ラーメンたけさん小布施店",
+        "響 YURA",
+        "多国籍ber 今どきの笹",
+        "3RD CAFF & MORE",
+        "こどもとときどきハープカフェ nana-mar",
+        "新鮮屋オタギリ",
+        "蔵のまち観光交流センターくらっと",
+        "Sweets market cafe",
+        "玉林餅菓子店",
+        "ラノッキオ",
+        "パンと焼菓子 ohana",
+        "中野陣屋・県庁記念館内 カフェ陣屋",
+        "+M",
+        "Bakery ON!",
+        "道のカフェ アンティロープ",
+        "Wine&Café Véraison ヴェレゾン"
+    ];
+
+    const lunchShops = [
+        "川合精肉店",
+        "かんてんぱぱショップ小布施店",
+        "信州中野観光センター",
+        "おやき茶屋 たちべり",
+        "ママちきん",
+        "山下薬局",
+        "おやつと喫茶のお店 菓秀/喫茶ハル",
+        "おやつとごはんの店 ai",
+        "カフェル・パニエ",
+        "たけちゃん食品 (須坂市役所地下食堂)",
+        "田中本家博物館 喫茶「龍潜」",
+        "ICHI cafe",
+        "kitchen vicky",
+        "ミナサンド",
+        "見晴茶屋"
+    ];
+
+    const dinnerShops = [
+        "焼肉居酒屋みのり",
+        "ラブズピアット",
+        "酒食処 縁-えにし-"
+    ];
+
+    // 明示的なリストによる分類を最優先
+    if (timeOfDay === 'allday') {
+        return allDayShops.includes(shop.name);
+    }
+    if (timeOfDay === 'lunch') {
+        return lunchShops.includes(shop.name);
+    }
+    if (timeOfDay === 'dinner') {
+        return dinnerShops.includes(shop.name);
+    }
+
+    // 'all'が選択されている場合は、以降のロジックで判断
+    if (timeOfDay === 'all') {
+        const timeToMinutes = (timeStr) => {
+            const [hour, minute] = timeStr.split(':').map(Number);
+            return hour * 60 + minute;
+        };
+
+        const doRangesOverlap = (shopOpenStart, shopOpenEnd, filterStart, filterEnd) => {
+            if (shopOpenEnd < shopOpenStart) {
+                shopOpenEnd += 24 * 60;
+            }
+            return Math.max(shopOpenStart, filterStart) < Math.min(shopOpenEnd, filterEnd);
+        };
+
+        const LUNCH_PERIOD_START = timeToMinutes("11:00");
+        const LUNCH_PERIOD_END = timeToMinutes("15:00");
+        const DINNER_PERIOD_START = timeToMinutes("17:00");
+        const DINNER_PERIOD_END = timeToMinutes("22:00");
+
+        const timeRangeRegex = /(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/g;
+        let shopTimeRanges = [];
+        let match;
+        while ((match = timeRangeRegex.exec(hoursStr)) !== null) {
+            shopTimeRanges.push({
+                open: timeToMinutes(match[1]),
+                close: timeToMinutes(match[2])
+            });
+        }
+
+        if (shopTimeRanges.length === 0) {
+            // Fallback for text-based heuristics if no explicit time ranges are found
+            if (hoursStr.includes("オールデイ") || hoursStr.includes("終日")) {
+                return true;
+            }
+            if (hoursStr.includes("ランチ") || hoursStr.includes("昼")) {
+                return true;
+            }
+            if (hoursStr.includes("ディナー") || hoursStr.includes("夜")) {
+                return true;
+            }
+            if (hoursStr.includes("16:00-") && hoursStr.includes("カレーは17時から提供")) {
+                return true;
+            }
+            return false;
+        }
+
+        let overlapsLunch = false;
+        let overlapsDinner = false;
+
+        for (const range of shopTimeRanges) {
+            if (doRangesOverlap(range.open, range.close, LUNCH_PERIOD_START, LUNCH_PERIOD_END)) {
+                overlapsLunch = true;
+            }
+            if (doRangesOverlap(range.open, range.close, DINNER_PERIOD_START, DINNER_PERIOD_END)) {
+                overlapsDinner = true;
+            }
+        }
+
+        // For 'all' filter, return true if it overlaps with either lunch or dinner, or is explicitly listed in any category
+        return overlapsLunch || overlapsDinner || allDayShops.includes(shop.name) || lunchShops.includes(shop.name) || dinnerShops.includes(shop.name);
+    }
+
+    return false; // Should not reach here for specific timeOfDay filters if not in explicit lists
+}
+
 function updateVisitCounter(filteredShops) {
-    // 通常店舗の訪問済み数を計算
-    const visitedRegularShops = allShopsData.filter(shop => shop.type === 'regular' && visitedShops.includes(shop.id)).length;
+    // 訪問済み店舗数の計算 (分子)
+    const visitedRegularShopsCount = filteredShops.filter(shop => shop.type === 'regular' && visitedShops.includes(shop.id)).length;
+    const visitedUniqueCurryGoShopsCount = new Set(filteredShops.filter(shop => shop.type === 'currygo' && visitedShops.includes(shop.id)).map(shop => shop.name)).size;
+    const totalVisited = visitedRegularShopsCount + visitedUniqueCurryGoShopsCount;
 
-    // カレー号店舗の訪問済み数をユニークな店舗名で計算
-    const visitedCurryGoShopNames = new Set();
-    allShopsData.filter(shop => shop.type === 'currygo' && visitedShops.includes(shop.id))
-                .forEach(shop => visitedCurryGoShopNames.add(shop.name));
-    const visitedUniqueCurryGoShopsCount = visitedCurryGoShopNames.size;
-
-    const totalVisited = visitedRegularShops + visitedUniqueCurryGoShopsCount;
-
-    // 表示可能な総店舗数（通常店舗の総数 + ユニークなカレー号店舗の総数）
-    const totalRegularShopsCount = allShopsData.filter(shop => shop.type === 'regular').length;
-    const totalUniqueCurryGoShopsCount = new Set(allShopsData.filter(shop => shop.type === 'currygo').map(shop => shop.name)).size;
-    const totalDisplayableShops = totalRegularShopsCount + totalUniqueCurryGoShopsCount;
+    // 表示されている店舗の総数 (分母)
+    // 通常店舗とユニークなカレー号店舗を区別してカウント
+    const regularShopsInView = filteredShops.filter(shop => shop.type === 'regular').length;
+    const uniqueCurryGoShopsInView = new Set(filteredShops.filter(shop => shop.type === 'currygo').map(shop => shop.name)).size;
+    const totalDisplayableShops = regularShopsInView + uniqueCurryGoShopsInView;
 
     const display = document.getElementById('visitCountDisplay');
     if (display) {
@@ -327,22 +558,29 @@ function updateVisitCounter(filteredShops) {
 }
 
 function setFilterButtonEvents() {
-    const buttons = document.querySelectorAll('.filter-container .filter-button');
-    buttons.forEach(button => {
+    const filterRowButtons = document.querySelectorAll('.filter-row .filter-button');
+    filterRowButtons.forEach(button => {
         button.addEventListener('click', () => {
-            if (button.parentElement.classList.contains('filter-row')) {
-                document.querySelectorAll('.filter-row .filter-button').forEach(b => b.classList.remove('active'));
-            }
-            if (button.id === 'filterOpen') {
-                button.classList.toggle('active');
-            } else {
+            // Handle mutually exclusive buttons (All, Visited, Unvisited)
+            if (button.id === 'filterAll' || button.id === 'filterVisited' || button.id === 'filterUnvisited') {
+                filterRowButtons.forEach(b => {
+                    if (b.id === 'filterAll' || b.id === 'filterVisited' || b.id === 'filterUnvisited') {
+                        b.classList.remove('active');
+                    }
+                });
                 button.classList.add('active');
+            }
+            // Handle toggle buttons (Open Today, Open Now)
+            else if (button.id === 'filterOpen' || button.id === 'filterOpenNow') {
+                button.classList.toggle('active');
             }
             applyFilters();
         });
     });
 
     document.getElementById('areaFilter').addEventListener('change', applyFilters);
+    document.getElementById('eatInTakeOutFilter').addEventListener('change', applyFilters);
+    document.getElementById('timeOfDayFilter').addEventListener('change', applyFilters);
 }
 
 // カレー号モーダルを表示する関数
@@ -405,10 +643,14 @@ function displayCurryGoModal() {
                     visitButton.classList.remove('visited');
                 }
                 visitButton.onclick = () => {
-                    if (isVisitedForDate) {
+                    const isCurrentlyVisited = visitedShops.includes(shopIdForDate);
+                    if (isCurrentlyVisited) {
                         visitedShops = visitedShops.filter(id => id !== shopIdForDate);
+                        recentlyVisitedId = null; // ★ 解除時はアニメーション不要
                     } else {
                         visitedShops.push(shopIdForDate);
+                        recentlyVisitedId = shopIdForDate; // ★ 訪問時にIDをセット
+                        new Audio('sounds/stamp.mp3').play(); // ★ 効果音を再生
                     }
                     saveVisitedShops();
                     applyFilters();

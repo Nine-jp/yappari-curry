@@ -5,9 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>やっぱりカレーだねフェス 訪問記録</title>
-  <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+JP&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic&display=swap" rel="stylesheet" />
 </head>
 <body>
 
@@ -40,6 +40,7 @@
         </div>
         <div class="filter-row">
           <button id="filterOpen" class="filter-button">今日行けるお店</button>
+          <button id="filterOpenNow" class="filter-button">今、行けるお店</button>
           <button id="showThisWeeksCurrygo" class="filter-button">今週のカレー号</button>
         </div>
       </div>
@@ -53,6 +54,21 @@
           <option value="中野">中野</option>
           <option value="高山">高山</option>
           <option value="カレー号">カレー号</option>
+        </select>
+
+        <label for="eatInTakeOutFilter">EatIn or TakeOut:</label>
+        <select id="eatInTakeOutFilter">
+          <option value="all">全て</option>
+          <option value="eatin">EatIn</option>
+          <option value="takeout">TakeOut</option>
+        </select>
+
+        <label for="timeOfDayFilter">時間帯で絞り込み:</label>
+        <select id="timeOfDayFilter">
+          <option value="all">全て</option>
+          <option value="allday">オールデイ</option>
+          <option value="lunch">ランチ</option>
+          <option value="dinner">ディナー</option>
         </select>
       </div>
 

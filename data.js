@@ -48,7 +48,7 @@ const shopsData = [
                 comment: "素材の味を生かしたスパイスカレー。カレーは随時変わりますのでSNSをチェックして下さい。"
             }
         ],
-        eatIn: true,
+        eatIn: false,
         takeOut: true,
         chotashi: "※当日のご注文は9:00~13:00の間に電話にて受付。お引き渡しは11:30-17:00まで。"
     },
@@ -137,7 +137,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
     {
@@ -203,7 +203,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
     {
@@ -225,7 +225,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
     {
@@ -247,7 +247,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: "※カレーメニューは17時からの提供"
     },
     {
@@ -291,7 +291,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
     {
@@ -313,7 +313,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
     {
@@ -335,7 +335,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
     {
@@ -362,7 +362,7 @@ const shopsData = [
                 comment: "やっぱりカレーだねフェス限定のカレーおかき（甘口・辛口）をぜひお楽しみください。"
             }
         ],
-        eatIn: true,
+        eatIn: false,
         takeOut: true,
         chotashi: "※カレーおかきを含む500円以上のお買い上げでスタンプ&缶バッチGET！"
     },
@@ -434,7 +434,7 @@ const shopsData = [
                 comment: "薬剤師が考案したカレースパイスの山崎味噌香料。山崎味噌香辛料を使った「たけちゃん食品」の薬膳タンドリーチキンです！"
             }
         ],
-        eatIn: true,
+        eatIn: false,
         takeOut: true,
         chotashi: null
     },
@@ -457,7 +457,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
 
@@ -509,7 +509,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
     {
@@ -531,7 +531,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
     {
@@ -553,7 +553,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
     {
@@ -596,7 +596,7 @@ const shopsData = [
                 comment: "数種類の香辛料をブレンドしたビーフカレーに、ソーセージをトッピングした焼きカレーパン。"
             }
         ],
-        eatIn: true,
+        eatIn: false,
         takeOut: true,
         chotashi: "※カレー商品を含む1,000円以上のお買い上げでスタンプ&缶バッチGET！"
     },
@@ -670,7 +670,7 @@ const shopsData = [
                 comment: "ジューシーなハンバーグと濃厚なカレー、そしてとろけるチーズの絶妙なハーモニーが楽しめます。"
             }
         ],
-        eatIn: true,
+        eatIn: false,
         takeOut: true,
         chotashi: "※テイクアウトは11:00-18:00"
     },
@@ -792,7 +792,7 @@ const shopsData = [
                 comment: "和牛テールのエキスが入ったカレーと昔なつかしのカレーの2種を販売予定。"
             }
         ],
-        eatIn: true,
+        eatIn: false,
         takeOut: true,
         chotashi: null
     },
@@ -815,7 +815,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
     {
@@ -858,7 +858,7 @@ const shopsData = [
                 comment: "前回大好評のイベント限定チーズカレーパン！福神漬け、スパイスとろーりチーズがたまらない！"
             }
         ],
-        eatIn: true,
+        eatIn: false,
         takeOut: true,
         chotashi: null
     },
@@ -880,7 +880,7 @@ const shopsData = [
                 comment: "カレー味のからあげとハーブを効かせたカレー手羽先揚げのセットです♪"
             }
         ],
-        eatIn: true,
+        eatIn: false,
         takeOut: true,
         chotashi: null
     },
@@ -948,7 +948,7 @@ const shopsData = [
                 comment: "カレー風味のおからおやき。お子様でも召し上がれる味付けです。昨年「和」でご提供したピザもあり。"
             }
         ],
-        eatIn: true,
+        eatIn: false,
         takeOut: true,
         chotashi: "※カレー商品を合計500円以上のお買い上げでスタンプ＆缶バッチGET!"
     },
@@ -993,7 +993,7 @@ const shopsData = [
             }
         ],
         eatIn: true,
-        takeOut: true,
+        takeOut: false,
         chotashi: null
     },
     {
