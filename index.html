@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>やっぱりカレーだねフェス 訪問記録</title>
+  <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+JP&display=swap" rel="stylesheet" />
 </head>
@@ -37,34 +38,23 @@
           <button id="filterVisited" class="filter-button">訪問済み</button>
           <button id="filterUnvisited" class="filter-button">未訪問</button>
         </div>
-        <div class="filter-single">
+        <div class="filter-row">
           <button id="filterOpen" class="filter-button">今日行けるお店</button>
+          <button id="showThisWeeksCurrygo" class="filter-button">今週のカレー号</button>
         </div>
       </div>
 
-      <!-- エリア選択 -->
-<div class="area-select">
-  <label for="areaFilter">どのエリアにする？:</label>
-  <select id="areaFilter" class="styled-select">
-    <option value="all">全て</option>
-    <option value="須坂">須坂</option>
-    <option value="小布施">小布施</option>
-    <option value="中野">中野</option>
-    <option value="高山">高山</option>
-  </select>
-</div>
-
-<!-- EAT IN / TAKE OUT フィルター -->
-<div class="style-select">
-  <label for="styleFilter">どっちで楽しむ？:</label>
-  <select id="styleFilter" class="styled-select">
-    <option value="all">全て</option>
-    <option value="eatIn">EAT IN</option>
-    <option value="takeOut">TAKE OUT</option>
-  </select>
-</div>
-
-
+      <div class="area-select">
+        <label for="areaFilter">エリアで絞り込み:</label>
+        <select id="areaFilter">
+          <option value="all">全て</option>
+          <option value="須坂">須坂</option>
+          <option value="小布施">小布施</option>
+          <option value="中野">中野</option>
+          <option value="高山">高山</option>
+          <option value="カレー号">カレー号</option>
+        </select>
+      </div>
 
       <!-- 🔽 追加：訪問数カウンター -->
       <p id="visitCountDisplay" class="visit-counter">訪問済み 0 / 0 店舗</p>
@@ -99,7 +89,25 @@
     </div>
   </div>
 
+  <!-- カレー号モーダル -->
+  <div id="currygoModal" class="modal">
+    <div class="modal-content currygo-modal-content">
+      <span class="close-button currygo-close-button">&times;</span>
+      <h3 id="currygoModalTitle">今週のカレー号 <a id="currygoInstagramLink" href="#" target="_blank" style="display:none;"><img src="images/icon-instagram.svg" alt="Instagram" class="instagram-icon"></a></h3>
+      <div id="currygoShopsContainer">
+        <!-- カレー号の店舗情報がここに動的に挿入されます -->
+      </div>
+      <div class="visit-gauge-container">
+        <p class="gauge-title">これまでの訪問数</p>
+        <div id="currygoVisitGauge" class="visit-gauge">
+          <!-- 訪問ゲージのアイコンがここに動的に挿入されます -->
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="data.js"></script>
+  <script src="currygo.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

@@ -168,7 +168,8 @@ main {
     font-weight: 700;
     font-size: 1.2rem;
     color: #6d4c41;
-    margin-bottom: 8px;
+    margin: 0;
+    margin-bottom: 2px;
 }
 
 .shop-area {
@@ -285,12 +286,12 @@ main {
 }
 
 .visit-toggle-button {
-    background-color: #6d4c41;
+    background-color: #ef6c00; /* Orange */
     color: #fff8e1;
 }
 
 .visit-toggle-button.visited {
-    background-color: #ef6c00;
+    background-color: #6d4c41; /* Brown */
     color: #fff8e1;
 }
 
@@ -460,66 +461,215 @@ main {
   transform: scale(1.2);
 }
 
-/* メニュー画像枠 */
-.menu-image {
-  width: 100%;
-  height: 120px;
-  margin: 6px 0;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #f3f3f3;
+/* モーダルアニメーション */
+@keyframes steamPop {
+  0% {
+    transform: scale(0.95) translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  animation: steamPop 0.4s ease-out;
+}
+
+/* モーダル内のインスタグラムアイコン */
+.modal-instagram-link {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.modal-instagram-link img {
+  width: 24px; /* アイコンのサイズ調整 */
+  height: 24px;
+}
+
+/* 訪問ゲージのスタイル */
+.visit-gauge {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-wrap: wrap; /* 折り返しを許可 */
+  gap: 5px; /* アイコン間のスペース */
+  margin-top: 15px;
+  justify-content: center; /* 中央寄せ */
 }
 
-.menu-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+.visit-gauge img {
+  width: 30px; /* アイコンのサイズ */
+  height: 30px;
 }
 
-/* 「画像準備中」表示 */
-.no-image {
-  color: #999;
-  font-size: 0.9rem;
+/* スマホ対応 */
+@media (max-width: 600px) {
+  .visit-gauge {
+    justify-content: center; /* スマホでも中央寄せ */
+  }
+}
+
+/* カレー号モーダル専用のスタイル */
+.currygo-modal-content {
+  /* 既存のmodal-contentのスタイルを継承しつつ、必要に応じて調整 */
+  max-width: 500px; /* カレー号モーダルに合わせた幅 */
+}
+
+.currygo-modal-content h3 {
+  color: #f57c00; /* カレー号のテーマカラー */
+}
+
+.currygo-modal-content .shop-info {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #fbc02d;
+}
+
+.currygo-modal-content .shop-info:last-child {
+  border-bottom: none;
+}
+
+.currygo-modal-content .shop-info p {
+  margin: 5px 0;
+}
+
+.currygo-modal-content .shop-info .instagram-link {
+  display: inline-block;
+  margin-left: 8px;
+}
+
+.currygo-modal-content .shop-info .instagram-link img {
+  width: 35px;
+  height: 35px;
+  vertical-align: middle;
+}
+
+.currygo-modal-content .visit-gauge-container {
+  margin-top: 20px;
   text-align: center;
 }
 
-/* メニュー名 */
-.menu-name {
+.currygo-modal-content .visit-gauge-container p {
   font-weight: bold;
-  margin-top: 8px;
-  font-size: 1rem;
+  margin-bottom: 10px;
 }
 
-/* メニューのコメント */
-.menu-comment {
-  font-size: 0.9rem;
-  margin-top: 4px;
-  color: #444;
+.currygo-modal-content .visit-gauge {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  max-width: 195px; /* 1行5個のアイコン + gap */
+  margin: 0 auto; /* 中央配置 */
 }
 
-/* EAT IN / TAKE OUT 情報 */
-.eat-take {
-  font-size: 0.85rem;
+.currygo-modal-content .visit-gauge img {
+  width: 35px; /* カレー号モーダル内のアイコンサイズ */
+  height: 35px;
+}
+
+/* モーダル内の日付表示 */
+.currygo-modal-content .date-display {
   font-weight: bold;
-  margin-top: 6px;
-  color: #333;
+  color: #6d4c41;
 }
 
-/* 共通スタイル：エリアとEAT IN/TAKE OUTのセレクトボックス */
-.styled-select {
-  padding: 6px 12px;
-  border: 1.5px solid #f5a623; /* 薄いオレンジの縁取り */
-  border-radius: 8px;
-  background-color: #fff3e0;
-  color: #333;
+/* モーダル内の店名 */
+.currygo-modal-content .shop-name-display {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #4e342e;
+}
+
+/* モーダル内のインスタグラムアイコン */
+.currygo-modal-content .instagram-icon {
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+/* モーダル内の訪問ゲージのタイトル */
+.currygo-modal-content .gauge-title {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: #5d4037;
+}
+
+/* モーダル内の訪問ゲージのアイコン */
+.currygo-modal-content .gauge-icon {
+  width: 30px;
+  height: 30px;
+}
+
+/* モーダル内の訪問ゲージの行 */
+.currygo-modal-content .gauge-row {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+/* モーダル内の訪問ゲージのコンテナ */
+.currygo-modal-content .visit-gauge-wrapper {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* モーダル内の訪問ゲージのテキスト */
+.currygo-modal-content .visit-gauge-text {
   font-size: 1rem;
-  font-family: inherit;
-  box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  color: #6d4c41;
+  margin-top: 10px;
+}
+
+/* モーダル内の訪問ゲージのアイコン */
+.currygo-modal-content .visit-gauge-icon {
+  width: 30px;
+  height: 30px;
+}
+
+/* モーダル内の訪問ゲージの行 */
+.currygo-modal-content .visit-gauge-row {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+/* モーダル内の訪問ゲージのコンテナ */
+.currygo-modal-content .visit-gauge-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* モーダル内の訪問ゲージのテキスト */
+.currygo-modal-content .visit-gauge-text {
+  font-size: 1rem;
+  color: #6d4c41;
+  margin-top: 10px;
+}
+
+/* モーダル内の訪問ゲージのアイコン */
+.currygo-modal-content .visit-gauge-icon {
+  width: 30px;
+  height: 30px;
+}
+
+/* モーダル内の訪問ゲージの行 */
+.currygo-modal-content .visit-gauge-row {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+/* 店舗カード内の画像スタイル */
+.shop-card-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
